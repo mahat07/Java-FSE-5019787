@@ -1,0 +1,47 @@
+interface PaymentProcessor {
+    void processPayment();
+}
+class PaymentGateway1 {
+    void specificMethod1() {
+        System.out.println("PaymentGateway1 specific method called.");
+    }
+}
+class PaymentGateway2 {
+    void specificMethod2() {
+        System.out.println("PaymentGateway2 specific method called.");
+    }
+}
+class Adapter1 implements PaymentProcessor {
+    private PaymentGateway1 gateway;
+
+    public Adapter1(PaymentGateway1 gateway) {
+        this.gateway = gateway;
+    }
+    public void processPayment() {
+        gateway.specificMethod1();
+    }
+}
+class Adapter2 implements PaymentProcessor {
+    private PaymentGateway2 gateway;
+
+    public Adapter2(PaymentGateway2 gateway) {
+        this.gateway = gateway;
+    }
+
+    public void processPayment() {
+        gateway.specificMethod2();
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        // Using Adapter for PaymentGateway1
+        PaymentGateway1 gateway1 = new PaymentGateway1();
+        PaymentProcessor adapter1 = new Adapter1(gateway1);
+        adapter1.processPayment();
+
+        // Using Adapter for PaymentGateway2
+        PaymentGateway2 gateway2 = new PaymentGateway2();
+        PaymentProcessor adapter2 = new Adapter2(gateway2);
+        adapter2.processPayment();
+    }
+}
