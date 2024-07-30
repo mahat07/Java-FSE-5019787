@@ -1,0 +1,94 @@
+// Document Interface
+public interface Document {
+    void open();
+    void close();
+}
+
+// Concrete WordDocument Class
+public class WordDocument implements Document {
+    public void open() {
+        System.out.println("Opening Word document...");
+    }
+
+    public void close() {
+        System.out.println("Closing Word document...");
+    }
+}
+
+// Concrete PdfDocument Class
+public class PdfDocument implements Document {
+    @Override
+    public void open() {
+        System.out.println("Opening PDF document...");
+    }
+    public void close() {
+        System.out.println("Closing PDF document...");
+    }
+}
+
+// Concrete ExcelDocument Class
+public class ExcelDocument implements Document {
+    @Override
+    public void open() {
+        System.out.println("Opening Excel document...");
+    }
+
+    @Override
+    public void close() {
+        System.out.println("Closing Excel document...");
+    }
+}
+
+// DocumentFactory Abstract Class
+public abstract class DocumentFactory {
+    public abstract Document createDocument();
+}
+
+// Concrete WordDocumentFactory Class
+public class WordDocumentFactory extends DocumentFactory {
+    @Override
+    public Document createDocument() {
+        return new WordDocument();
+    }
+}
+
+// Concrete PdfDocumentFactory Class
+public class PdfDocumentFactory extends DocumentFactory {
+    @Override
+    public Document createDocument() {
+        return new PdfDocument();
+    }
+}
+
+// Concrete ExcelDocumentFactory Class
+public class ExcelDocumentFactory extends DocumentFactory {
+    @Override
+    public Document createDocument() {
+        return new ExcelDocument();
+    }
+}
+
+// FactoryMethodPatternExample Class
+public class FactoryMethodPatternExample {
+    public static void main(String[] args) {
+        // Create factories
+        DocumentFactory wordFactory = new WordDocumentFactory();
+        DocumentFactory pdfFactory = new PdfDocumentFactory();
+        DocumentFactory excelFactory = new ExcelDocumentFactory();
+
+        // Create documents using factories
+        Document wordDoc = wordFactory.createDocument();
+        Document pdfDoc = pdfFactory.createDocument();
+        Document excelDoc = excelFactory.createDocument();
+
+        // Use the documents
+        wordDoc.open();
+        wordDoc.close();
+
+        pdfDoc.open();
+        pdfDoc.close();
+
+        excelDoc.open();
+        excelDoc.close();
+    }
+}
