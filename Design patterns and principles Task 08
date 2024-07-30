@@ -1,0 +1,66 @@
+public interface PaymentStrategy {
+    void pay(double amount);
+}
+public class CreditCardPayment implements PaymentStrategy {
+    private String cardNumber;
+    private String cardHolderName;
+    private String cvv;
+    private String expirationDate;
+
+    public CreditCardPayment(String cardNumber, String cardHolderName, String cvv, String expirationDate) {
+        this.cardNumber = cardNumber;
+        this.cardHolderName = cardHolderName;
+        this.cvv = cvv;
+        this.expirationDate = expirationDate;
+    }
+
+    public void pay(double amount) {
+        // Implementation of payment using a credit card
+        System.out.println("Paid " + amount + " using Credit Card.");
+    }
+}
+public class PayPalPayment implements PaymentStrategy {
+    private String email;
+    private String password;
+
+    public PayPalPayment(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public void pay(double amount) {
+        // Implementation of payment using PayPal
+        System.out.println("Paid " + amount + " using PayPal.");
+    }
+}
+public class PaymentContext {
+    private PaymentStrategy paymentStrategy;
+
+    public void setPaymentStrategy(PaymentStrategy paymentStrategy) {
+        this.paymentStrategy = paymentStrategy;
+    }
+
+    public void executePayment(double amount) {
+        if (paymentStrategy == null) {
+            System.out.println("No payment method selected.");
+        } else {
+            paymentStrategy.pay(amount);
+        }
+    }
+}
+public class StrategyPatternExample {
+
+    public static void main(String[] args) {
+        PaymentContext context = new PaymentContext();
+
+        // Use Credit Card payment strategy
+        PaymentStrategy creditCard = new CreditCardPayment("1234567890123456", "John Doe", "123", "12/24");
+        context.setPaymentStrategy(creditCard);
+        context.executePayment(250.00);
+
+        // Use PayPal payment strategy
+        PaymentStrategy payPal = new PayPalPayment("john.doe@example.com", "password123");
+        context.setPaymentStrategy(payPal);
+        context.executePayment(300.00);
+    }
+}
