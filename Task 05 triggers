@@ -1,0 +1,64 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class UpdateCustomer {
+    public static void updateCustomer(Connection conn, int customerId, String newDetails) {
+        String updateQuery = "UPDATE Customers SET details = ? WHERE customer_id = ?";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+            pstmt.setString(1, newDetails);
+            pstmt.setInt(2, customerId);
+            pstmt.executeUpdate();
+            conn.commit();
+            System.out.println("Customer record updated successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error updating customer record: " + e.getMessage());
+        }
+    }
+}
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class InsertTransaction {
+    public static void insertTransaction(Connection conn, int transactionId, int accountId, double amount, String type, String details) {
+        String insertQuery = "INSERT INTO Transactions (transaction_id, account_id, amount, transaction_type, details) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+            pstmt.setInt(1, transactionId);
+            pstmt.setInt(2, accountId);
+            pstmt.setDouble(3, amount);
+            pstmt.setString(4, type);
+            pstmt.setString(5, details);
+            pstmt.executeUpdate();
+            conn.commit();
+            System.out.println("Transaction inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting transaction: " + e.getMessage());
+        }
+    }
+}
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class CheckAndInsertTransaction {
+    public static void insertTransaction(Connection conn, int accountId, double amount, String type) {
+        String insertQuery = "INSERT INTO Transactions (account_id, amount, transaction_type) VALUES (?, ?, ?)";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+            pstmt.setInt(1, accountId);
+            pstmt.setDouble(2, amount);
+            pstmt.setString(3, type);
+            pstmt.executeUpdate();
+            conn.commit();
+            System.out.println("Transaction inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting transaction: " + e.getMessage());
+        }
+    }
+}
+
