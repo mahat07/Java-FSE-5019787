@@ -1,0 +1,74 @@
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+
+public class CalculateAge {
+    public static int getAge(Connection conn, java.sql.Date dateOfBirth) {
+        String callFunction = "{ ? = call CalculateAge(?) }";
+        int age = -1;
+
+        try (CallableStatement stmt = conn.prepareCall(callFunction)) {
+            stmt.registerOutParameter(1, Types.INTEGER);
+            stmt.setDate(2, dateOfBirth);
+            stmt.execute();
+            age = stmt.getInt(1);
+            System.out.println("Customer's age: " + age);
+        } catch (SQLException e) {
+            System.out.println("Error calculating age: " + e.getMessage());
+        }
+
+        return age;
+    }
+}
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+
+public class CalculateMonthlyInstallment {
+    public static double getMonthlyInstallment(Connection conn, double loanAmount, double interestRate, int durationYears) {
+        String callFunction = "{ ? = call CalculateMonthlyInstallment(?, ?, ?) }";
+        double installment = -1;
+
+        try (CallableStatement stmt = conn.prepareCall(callFunction)) {
+            stmt.registerOutParameter(1, Types.DOUBLE);
+            stmt.setDouble(2, loanAmount);
+            stmt.setDouble(3, interestRate);
+            stmt.setInt(4, durationYears);
+            stmt.execute();
+            installment = stmt.getDouble(1);
+            System.out.println("Monthly installment: " + installment);
+        } catch (SQLException e) {
+            System.out.println("Error calculating monthly installment: " + e.getMessage());
+        }
+
+        return installment;
+    }
+}
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+
+public class HasSufficientBalance {
+    public static boolean checkBalance(Connection conn, int accountId, double amount) {
+        String callFunction = "{ ? = call HasSufficientBalance(?, ?) }";
+        boolean hasSufficientBalance = false;
+
+        try (CallableStatement stmt = conn.prepareCall(callFunction)) {
+            stmt.registerOutParameter(1, Types.BOOLEAN);
+            stmt.setInt(2, accountId);
+            stmt.setDouble(3, amount);
+            stmt.execute();
+            hasSufficientBalance = stmt.getBoolean(1);
+            System.out.println("Sufficient balance: " + hasSufficientBalance);
+        } catch (SQLException e) {
+            System.out.println("Error checking balance: " + e.getMessage());
+        }
+
+        return hasSufficientBalance;
+    }
+}
