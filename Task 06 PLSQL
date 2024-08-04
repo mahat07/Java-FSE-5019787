@@ -1,0 +1,86 @@
+DECLARE
+    CURSOR c_transactions IS
+        SELECT customer_id, transaction_id, transaction_date, amount
+        FROM Transactions
+        WHERE EXTRACT(MONTH FROM transaction_date) = EXTRACT(MONTH FROM SYSDATE)
+          AND EXTRACT(YEAR FROM transaction_date) = EXTRACT(YEAR FROM SYSDATE);
+          
+    v_customer_id Customers.customer_id%TYPE;
+    v_transaction_id Transactions.transaction_id%TYPE;
+    v_transaction_date Transactions.transaction_date%TYPE;
+    v_amount Transactions.amount%TYPE;
+
+BEGIN
+    OPEN c_transactions;
+    
+    LOOP
+        FETCH c_transactions INTO v_customer_id, v_transaction_id, v_transaction_date, v_amount;
+        EXIT WHEN c_transactions%NOTFOUND;
+
+        -- Print or generate statement for each customer
+        DBMS_OUTPUT.PUT_LINE('Customer ID: ' || v_customer_id || ', Transaction ID: ' || v_transaction_id || ', Date: ' || v_transaction_date || ', Amount: ' || v_amount);
+        
+    END LOOP;
+
+    CLOSE c_transactions;
+END;
+/
+
+DECLARE
+    CURSOR c_accounts IS
+        SELECT account_id, balance
+        FROM Accounts;
+        
+    v_account_id Accounts.account_id%TYPE;
+    v_balance Accounts.balance%TYPE;
+    v_fee NUMBER := 50; -- Example annual fee
+
+BEGIN
+    OPEN c_accounts;
+    
+    LOOP
+        FETCH c_accounts INTO v_account_id, v_balance;
+        EXIT WHEN c_accounts%NOTFOUND;
+
+        -- Deduct annual fee from each account
+        UPDATE Accounts
+        SET balance = balance - v_fee
+        WHERE account_id = v_account_id;
+        
+    END LOOP;
+
+    CLOSE c_accounts;
+    COMMIT;
+END;
+/
+
+DECLARE
+    CURSOR c_loans IS
+        SELECT loan_id, interest_rate
+        FROM Loans;
+        
+    v_loan_id Loans.loan_id%TYPE;
+    v_interest_rate Loans.interest_rate%TYPE;
+    v_new_interest_rate NUMBER;
+    
+BEGIN
+    OPEN c_loans;
+    
+    LOOP
+        FETCH c_loans INTO v_loan_id, v_interest_rate;
+        EXIT WHEN c_loans%NOTFOUND;
+
+        -- Apply new interest rate policy
+        v_new_interest_rate := v_interest_rate * 1.1; -- Example adjustment: increase by 10%
+        
+        UPDATE Loans
+        SET interest_rate = v_new_interest_rate
+        WHERE loan_id = v_loan_id;
+        
+    END LOOP;
+
+    CLOSE c_loans;
+    COMMIT;
+END;
+/
+
