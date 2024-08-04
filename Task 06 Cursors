@@ -1,0 +1,36 @@
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ExecutePLSQLBlocks {
+    
+    public static void executePLSQLBlock(Connection conn, String plsqlBlock) {
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(plsqlBlock);
+            conn.commit();
+            System.out.println("PL/SQL block executed successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error executing PL/SQL block: " + e.getMessage());
+            try {
+                conn.rollback();
+            } catch (SQLException rollbackEx) {
+                System.out.println("Error during rollback: " + rollbackEx.getMessage());
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        // Assuming you have a method to get a Connection object
+        Connection conn = null; // replace with actual connection code
+        
+        // Example PL/SQL blocks
+        String generateMonthlyStatements = "DECLARE ..."; // Place Scenario 1 PL/SQL block here
+        String applyAnnualFee = "DECLARE ..."; // Place Scenario 2 PL/SQL block here
+        String updateLoanInterestRates = "DECLARE ..."; // Place Scenario 3 PL/SQL block here
+        
+        // Execute PL/SQL blocks
+        executePLSQLBlock(conn, generateMonthlyStatements);
+        executePLSQLBlock(conn, applyAnnualFee);
+        executePLSQLBlock(conn, updateLoanInterestRates);
+    }
+}
